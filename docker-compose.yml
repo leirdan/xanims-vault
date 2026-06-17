@@ -1,0 +1,43 @@
+version: '3.8'
+
+networks:
+  embedded-network:
+    driver: bridge
+
+services:
+  api:
+    container_name: xanims-api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_CLIENT: sqlite
+      DATABASE_FILENAME: .tmp/data.db
+      NODE_ENV: development
+    env_file:
+      - ./api/.env
+    volumes:
+      - ./api:/opt/app
+      - /opt/app/node_modules
+    ports:
+      - "1337:1337"
+    networks:
+      - embedded-network
+
+  ui:
+    container_name: xanims-ui
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    environment:
+      NEXT_PUBLIC_API_URL: http://xanims-api:1337
+    volumes:
+      - ./ui:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    networks:
+      - embedded-network
+    depends_on:
+      - api

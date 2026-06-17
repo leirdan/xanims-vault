@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "diet_schedules",
+  "info": {
+    "singularName": "diet-schedule",
+    "pluralName": "diet-schedules",
+    "displayName": "DietSchedule"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "diet": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::diet.diet"
+    },
+    "hour": {
+      "type": "time"
+    }
+  }
+}

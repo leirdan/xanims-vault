@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "intrusion_alerts",
+  "info": {
+    "singularName": "intrusion-alert",
+    "pluralName": "intrusion-alerts",
+    "displayName": "IntrusionAlert"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cat": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::cat.cat"
+    },
+    "intruder_nfc": {
+      "type": "uid"
+    },
+    "date": {
+      "type": "datetime"
+    }
+  }
+}

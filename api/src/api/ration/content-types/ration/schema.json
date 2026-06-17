@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "rations",
+  "info": {
+    "singularName": "ration",
+    "pluralName": "rations",
+    "displayName": "Ration"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "description": {
+      "type": "string",
+      "required": true
+    },
+    "brand": {
+      "type": "string",
+      "required": false
+    },
+    "kcal_per_gram": {
+      "type": "decimal",
+      "required": true
+    },
+    "category": {
+      "type": "string"
+    }
+  }
+}

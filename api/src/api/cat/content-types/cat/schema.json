@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cats",
+  "info": {
+    "singularName": "cat",
+    "pluralName": "cats",
+    "displayName": "Cat"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "life_stage_factor": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::life-stage-factor.life-stage-factor"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "birth_date": {
+      "type": "date",
+      "required": true
+    },
+    "weight": {
+      "type": "decimal",
+      "required": true
+    },
+    "neutered": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
+    "nfc": {
+      "type": "uid"
+    },
+    "deleted_at": {
+      "type": "datetime"
+    }
+  }
+}

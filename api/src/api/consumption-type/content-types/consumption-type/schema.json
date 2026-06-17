@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "consumption_types",
+  "info": {
+    "singularName": "consumption-type",
+    "pluralName": "consumption-types",
+    "displayName": "ConsumptionType"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "description": {
+      "type": "string",
+      "required": true
+    },
+    "deleted_at": {
+      "type": "datetime"
+    }
+  }
+}

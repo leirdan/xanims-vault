@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "diets",
+  "info": {
+    "singularName": "diet",
+    "pluralName": "diets",
+    "displayName": "Diet"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cat": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::cat.cat"
+    },
+    "ration": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::ration.ration"
+    },
+    "portion": {
+      "type": "decimal",
+      "required": true
+    },
+    "deleted_at": {
+      "type": "datetime"
+    }
+  }
+}

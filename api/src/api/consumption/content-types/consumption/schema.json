@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "consumptions",
+  "info": {
+    "singularName": "consumption",
+    "pluralName": "consumptions",
+    "displayName": "Consumption"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cat": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::cat.cat"
+    },
+    "diet_schedule": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::diet-schedule.diet-schedule"
+    },
+    "consumption_type": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::consumption-type.consumption-type"
+    },
+    "amount": {
+      "type": "decimal"
+    }
+  }
+}

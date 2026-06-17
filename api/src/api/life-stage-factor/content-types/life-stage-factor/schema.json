@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "life_stage_factors",
+  "info": {
+    "singularName": "life-stage-factor",
+    "pluralName": "life-stage-factors",
+    "displayName": "LifeStageFactor"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "description": {
+      "type": "string",
+      "required": true
+    },
+    "factor": {
+      "type": "decimal",
+      "required": true
+    }
+  }
+}
