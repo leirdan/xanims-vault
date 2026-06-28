@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 import { AUTH, HOMEPAGE, CATS, FACTORS } from "./constants";
 
 const client = strapi({ baseURL: "http://localhost:1337/api" }); // TODO: mover para um .env próprio
-const headers = { "Content-Type": "application/json" };
 
 export async function SignIn(prevState: any, formData: FormData) {
     let success = false;
@@ -15,7 +14,8 @@ export async function SignIn(prevState: any, formData: FormData) {
         const password = formData.get("password")
 
         const response = await client.fetch(AUTH, {
-            method: "POST", headers,
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ identifier: username, password })
         })
 
@@ -42,7 +42,14 @@ export async function SignIn(prevState: any, formData: FormData) {
 
 export async function GetCats(): Promise<Cat[]> {
     try {
-        const response = await client.fetch(CATS, { method: "GET", headers })
+        const auth = await getAuth();
+        const response = await client.fetch(CATS, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${auth.jwt}`
+            },
+        })
         if (!response.ok) {
             console.error("erro ao buscar os gato");
         }
@@ -58,7 +65,14 @@ export async function GetCats(): Promise<Cat[]> {
 
 export async function GetLifeStageFactors(): Promise<LifeStageFactor[]> {
     try {
-        const response = await client.fetch(FACTORS, { method: "GET", headers })
+        const auth = await getAuth();
+        const response = await client.fetch(FACTORS, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${auth.jwt}`
+            },
+        })
         if (!response.ok) {
             console.error("erro ao buscar os fator");
         }
@@ -74,19 +88,23 @@ export async function GetLifeStageFactors(): Promise<LifeStageFactor[]> {
 
 export async function AddCat(prevState: any, formData: FormData) {
     try {
+        const auth = await getAuth();
         const body = {
             name: formData.get("name"),
             birth_date: formData.get("birth_date"),
             weight: parseFloat(formData.get("weight") as string),
             neutered: formData.get("neutered") === "true" ? 1 : 0,
             nfc: null,
-            user_id: 1, // TODO: vincular ao user
+            user_id: auth.userId,
             life_stage_factor_id: parseInt(formData.get("life_stage_factor_id") as string),
         };
 
         const response = await client.fetch(CATS, {
             method: "POST",
-            headers,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${auth.jwt}`
+            },
             body: JSON.stringify({ data: body })
         })
 
