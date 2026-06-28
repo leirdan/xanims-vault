@@ -27,7 +27,7 @@ export async function SignIn(prevState: any, formData: FormData) {
 
         const store = await cookies();
         store.set("token", data.jwt); // TODO: setar um tempo de expiração?
-        store.set("userId", data.user.id);
+        store.set("userId", data.user.documentId);
 
         success = true;
     }
@@ -43,7 +43,7 @@ export async function SignIn(prevState: any, formData: FormData) {
 export async function GetCats(): Promise<Cat[]> {
     try {
         const auth = await getAuth();
-        const response = await client.fetch(CATS, {
+        const response = await client.fetch(`${CATS}?populate=*`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -54,6 +54,7 @@ export async function GetCats(): Promise<Cat[]> {
             console.error("erro ao buscar os gato");
         }
         const data = await response.json();
+        console.log(data)
         return data.data || []
     } catch (err: any) {
         if (err instanceof StrapiValidationError) {
@@ -93,12 +94,11 @@ export async function AddCat(prevState: any, formData: FormData) {
             name: formData.get("name"),
             birth_date: formData.get("birth_date"),
             weight: parseFloat(formData.get("weight") as string),
-            neutered: formData.get("neutered") === "true" ? 1 : 0,
+            neutered: formData.get("neutered") === "true",
             nfc: null,
-            user_id: auth.userId,
-            life_stage_factor_id: parseInt(formData.get("life_stage_factor_id") as string),
+            user: auth.userId,
+            life_stage_factor: formData.get("life_stage_factor_id")
         };
-
         const response = await client.fetch(CATS, {
             method: "POST",
             headers: {
@@ -114,15 +114,16 @@ export async function AddCat(prevState: any, formData: FormData) {
 
         return { success: true, message: "Gato e dieta gerados com sucesso!" };
     } catch (error: any) {
+        console.error(error)
         return { success: false, message: error.message || "Erro inesperado." };
     }
 }
 
-async function getAuth(): Promise<{ jwt: string, userId: number }> {
+async function getAuth(): Promise<{ jwt: string, userId: string }> {
     const store = await cookies();
-    let jwt: string = "", userId: number = -1;
+    let jwt: string = "", userId: string = ""
     if (store.get("token")) jwt = store.get("token")?.value || ""
-    if (store.get("userId")) userId = Number.parseInt(store.get("userId")?.value ?? "-1")
+    if (store.get("userId")) userId = store.get("userId")?.value || ""
 
     return { jwt, userId }
 }
