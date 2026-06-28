@@ -5,24 +5,40 @@ networks:
     driver: bridge
 
 services:
-  api:
-    container_name: xanims-api
+  mqtt:
     build:
-      context: ./api
+      context: ./mosquitto
       dockerfile: Dockerfile
-    environment:
-      DATABASE_CLIENT: sqlite
-      DATABASE_FILENAME: .tmp/data.db
-      NODE_ENV: development
-    env_file:
-      - ./api/.env
-    volumes:
-      - ./api:/opt/app
-      - /opt/app/node_modules
+    image: eclipse-mosquitto
+    container_name: xanims-mqtt
     ports:
-      - "1337:1337"
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./mosquitto/data:/mosquitto/data:rw
+      - ./mosquitto/log:/mosquitto/log:rw
+    restart: unless-stopped
     networks:
       - embedded-network
+  # api:
+  #   container_name: xanims-api
+  #   build:
+  #     context: ./api
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     DATABASE_CLIENT: sqlite
+  #     DATABASE_FILENAME: .tmp/data.db
+  #     NODE_ENV: development
+  #   env_file:
+  #     - ./api/.env
+  #   volumes:
+  #     - ./api:/opt/app
+  #     - /opt/app/node_modules
+  #   ports:
+  #     - "1337:1337"
+  #   networks:
+  #     - embedded-network
 
   ui:
     container_name: xanims-ui
@@ -39,5 +55,10 @@ services:
       - "3000:3000"
     networks:
       - embedded-network
-    depends_on:
-      - api
+    # depends_on:
+      # - api
+
+volumes:
+  config:
+  data:
+  log:
