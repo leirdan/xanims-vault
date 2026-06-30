@@ -21,24 +21,28 @@ services:
     restart: unless-stopped
     networks:
       - embedded-network
-  # api:
-  #   container_name: xanims-api
-  #   build:
-  #     context: ./api
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     DATABASE_CLIENT: sqlite
-  #     DATABASE_FILENAME: .tmp/data.db
-  #     NODE_ENV: development
-  #   env_file:
-  #     - ./api/.env
-  #   volumes:
-  #     - ./api:/opt/app
-  #     - /opt/app/node_modules
-  #   ports:
-  #     - "1337:1337"
-  #   networks:
-  #     - embedded-network
+
+  api:
+    container_name: xanims-api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_CLIENT: sqlite
+      DATABASE_FILENAME: .tmp/data.db
+      NODE_ENV: development
+    env_file:
+      - ./api/.env
+    volumes:
+      - ./api:/opt/app
+      - /opt/app/node_modules
+      - /opt/app/node_modules/.strapi
+    ports:
+      - "1337:1337"
+    networks:
+      - embedded-network
+    depends_on:
+      - mqtt
 
   ui:
     container_name: xanims-ui
@@ -55,8 +59,8 @@ services:
       - "3000:3000"
     networks:
       - embedded-network
-    # depends_on:
-      # - api
+    depends_on:
+      - api
 
 volumes:
   config:

@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AUTH, HOMEPAGE, CATS, FACTORS } from "./constants";
 
-const client = strapi({ baseURL: "http://localhost:1337/api" }); // TODO: mover para um .env próprio
+const client = strapi({ baseURL: process.env.NEXT_PUBLIC_API_URL + '/api' });
 
 export async function SignIn(prevState: any, formData: FormData) {
     let success = false;
