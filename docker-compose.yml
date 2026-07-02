@@ -21,6 +21,10 @@ services:
     restart: unless-stopped
     networks:
       - embedded-network
+    command: sh -c "touch /mosquitto/config/passwd &&
+             mosquitto_passwd -b /mosquitto/config/pwfile strapi strapi &&
+             mosquitto_passwd -b /mosquitto/config/pwfile embedded embedded &&
+             /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf"
 
   api:
     container_name: xanims-api
