@@ -1,0 +1,9 @@
+= Introdução
+
+A alimentação adequada dos felinos é fundamental para o seu desenvolvimento saudável. Em residências com mais de um gato em condições distintas como por exemplo, animais castrados e não castrados, filhotes ou gatos em diferentes fases etárias, torna necessário oferecer porções e tipos de ração específicos para cada animal, uma vez que as necessidades nutricionais variam consideravelmente entre eles. Gatos castrados, por exemplo, tendem a ter metabolismo mais lento e exigem dietas com menor teor calórico em comparação aos não castrados.
+
+Entretanto, o comportamento natural dos felinos dificulta o controle alimentar individualizado. Por serem animais independentes e territorialistas, é comum que um gato consuma a ração destinada a outro, especialmente quando este demora mais para se alimentar ou se ausenta momentaneamente do pote. Esse consumo indevido de alimento gera desequilíbrios nutricionais que podem comprometer a saúde dos animais ao longo do tempo.
+
+Além disso, gatos devem se alimentar em múltiplos horários ao longo do dia, de modo a evitar tanto o acúmulo de calorias desnecessário quanto a ansiedade associada à concentração da alimentação em apenas um ou dois momentos do dia. Soluções existentes no mercado, como comedouros automáticos com horário programado, apresentam limitações relevantes: a liberação de ração em horários fixos, sem qualquer mecanismo de controle de acesso, não impede que outro animal da casa consuma a porção alheia, e o esquecimento humano de repor a ração manualmente pode resultar em períodos de privação alimentar.
+
+Diante desse cenário, o presente projeto propõe o desenvolvimento do Xanim's Vault, um dispenser inteligente e automático de ração, capaz de identificar o animal por meio de tecnologia NFC, calcular e liberar porções individualizadas ao longo do dia e impedir o acesso de outros felinos à ração de um gato específico.
