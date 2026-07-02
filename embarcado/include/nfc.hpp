@@ -5,7 +5,9 @@
 #include <Wire.h>
 #include <Adafruit_PN532.h>
 
-void inicializarNfc(int pinoSda, int pinoScl);
-String lerColeira();
+extern Adafruit_PN532 nfc;
+
+void nfc_init(int pinoSda, int pinoScl);
+String nfc_read_tag();
 
 #endif

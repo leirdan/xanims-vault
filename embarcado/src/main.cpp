@@ -20,9 +20,10 @@ void setup()
 
   Serial.println("Starting Xanim's Vault...");
 
-  inicializarNfc(NFC_SDA, NFC_SCL);
-  inicializarRtc();
-  inicializarWifi(WIFI_SSID, WIFI_SENHA);
+  nfc_init(NFC_SDA, NFC_SCL);
+  // inicializarRtc();
+  MQTT_init();
+  WiFi_init(WIFI_SSID, WIFI_SENHA);
 }
 
 void loop()
@@ -34,27 +35,36 @@ void loop()
     Serial.println(obterHorarioFormatado());
   }
 
-  String tagColeira = lerColeira();
+  MQTT_connect();
+  mqtt.processPackets(100);
+
+  String tagColeira = nfc_read_tag();
 
   if (tagColeira != "")
   {
     Serial.print("Tag lida: ");
     Serial.println(tagColeira);
 
-    bool poteCorreto = (tagColeira == "87A7C464");
+    JsonDocument payload;
+    payload["nfc"] = tagColeira;
+    String raw_payload;
+    serializeJson(payload, raw_payload);
+    mqtt_cat_nfc.publish(raw_payload.c_str());
 
-    if (poteCorreto)
-    {
-      Serial.println("Gato reconhecido! Liberando comida...");
-      tocarMusica(BUZZER_PIN);
-    }
-    else
-    {
-      Serial.println("Gato não reconhecido (Invasor)!");
-    }
+    // bool poteCorreto = (tagColeira == "87A7C464");
+
+    // if (poteCorreto)
+    // {
+    //   Serial.println("Gato reconhecido! Liberando comida...");
+    //   // tocarMusica(BUZZER_PIN);
+    // }
+    // else
+    // {
+    //   Serial.println("Gato não reconhecido (Invasor)!");
+    // }
 
     // peso  fixo em 0 ate ter o sensor de peso integrado
-    enviarEventoAlimentacao(tagColeira, poteCorreto, 0.0, obterHorarioFormatado());
+    // enviarEventoAlimentacao(tagColeira, poteCorreto, 0.0, obterHorarioFormatado());
 
     delay(2000);
   }

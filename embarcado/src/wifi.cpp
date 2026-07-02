@@ -1,10 +1,11 @@
 #include "wifi.hpp"
-#include <ESP8266WiFi.h>
 
-void inicializarWifi(const char *ssid, const char *senha)
+WiFiClient wifi_client;
+
+void WiFi_init(const char *ssid, const char *password)
 {
   Serial.print("Conectando ao WiFi");
-  WiFi.begin(ssid, senha);
+  WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED)
   {
