@@ -1,5 +1,42 @@
 # Xanim's Vault
 
+## Tópicos
+
+#### CAT/NFC
+- Pub: embedded
+- Sub: strapi
+Payload:
+```json
+{ 
+    "nfc": "string"
+}
+```
+
+#### CAT/SYNC
+- Pub: strapi
+- Sub: embedded
+Payload:
+```json
+{ 
+    "nfc": "string",
+    "portion": 0,
+    "hours": [ 
+       "00:00",
+       "00:01",
+       // ... 
+    ]
+}
+```
+
+#### CAT/INTRUDER
+- Pub: embedded
+- Sub: strapi
+
+#### FEED/REGISTER
+
+- Pub: embedded
+- Sub: strapi
+
 ## Configuração Docker
 
 <!---
