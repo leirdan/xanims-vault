@@ -17,8 +17,8 @@ extern Adafruit_MQTT_Client mqtt;
 
 extern Adafruit_MQTT_Publish mqtt_cat_nfc;
 extern Adafruit_MQTT_Subscribe mqtt_cat_sync; 
-extern Adafruit_MQTT_Publish mqtt_cat_intruder ;
-extern Adafruit_MQTT_Publish mqtt_feed_register ;
+extern Adafruit_MQTT_Publish mqtt_cat_intruder;
+extern Adafruit_MQTT_Publish mqtt_feed_register;
 
 void MQTT_connect();
 void MQTT_cat_sync_callback(char *data, uint16_t len);

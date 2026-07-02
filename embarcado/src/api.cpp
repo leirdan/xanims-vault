@@ -3,6 +3,7 @@
 #include <WiFiClient.h>
 #include "wifi.hpp"
 #include "api.hpp"
+#include "mem.hpp"
 
 Adafruit_MQTT_Client mqtt(&wifi_client, MQTT_SERVER_IP, MQTT_SERVER_PORT, MQTT_USERNAME, MQTT_PASSWORD);
 
@@ -51,11 +52,20 @@ void MQTT_cat_sync_callback(char *data, uint16_t len)
         return;
     }
 
-    const char *nfc = document["nfc"];
+    String nfc = String(document["nfc"]);
     uint16_t portion = document["portion"];
     JsonArray hours = document["hours"];
 
-    // TODO: salvar em memória flash
+    mem_store_string(nfc_k, nfc);
+    mem_store_int(portion_k, portion);
+    
+    for (size_t i = 0; i < hours.size(); i++) {
+      mem_store_string(String("HOUR_" + i + 1), hours[i]);
+    }
+
+    Serial.println("Dados salvos: ");
+    Serial.println(mem_get_string(nfc_k));
+    Serial.println(mem_get_int(portion_k));
 }
 
 void MQTT_init()
@@ -63,6 +73,7 @@ void MQTT_init()
     mqtt_cat_sync.setCallback(MQTT_cat_sync_callback);
     mqtt.subscribe(&mqtt_cat_sync);
 }
+
 void enviarEventoAlimentacao(String tagGato, bool poteCorreto, float pesoConsumidoGramas, String horario)
 {
   /*
