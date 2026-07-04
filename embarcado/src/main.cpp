@@ -34,8 +34,8 @@ void loop()
   if (millis() - ultimoPrintHorario >= 1000)
   {
     ultimoPrintHorario = millis();
-    // Serial.print("Horário atual: ");
-    // Serial.println(rtc_get_formatted_hour());
+    Serial.print("Horário atual: ");
+    Serial.println(rtc_get_formatted_hour());
   }
 
   MQTT_connect();
@@ -55,27 +55,37 @@ void loop()
     mqtt_cat_nfc.publish(raw_payload.c_str());
     delay(2000);
   }
-  else
+  else if (nfc_tag != "")
   {
-    Serial.println("Tem dados! Skippando...");
     // mem_erase(); // COMENTAR QUANDO QUISER MANTER
     String stored_nfc = mem_get_string(nfc_k);
+    Serial.print("Stored NFC: ");
+    Serial.println(stored_nfc);
+    Serial.print("Read NFC: ");
+    Serial.println(nfc_tag);
     if (stored_nfc == nfc_tag)
     {
       // check container state and opens if its open
+      Serial.println("Autorizado.");
     }
     else // handle intruder:
     {
+      Serial.println("Intruso.");
       // if container is opened then closes it
       container_toggle(true);
       // esp sends invasion alert through mqtt topic to api
-      String invasion_alert = rtc_get_formatted_hour();
-      Serial.println("Hora da invasão: " + invasion_alert);
+      String invasion_alert = rtc_get_iso_date();
+      Serial.print("Hora da invasão: ");
+      Serial.println(invasion_alert);
 
       MQTT_send_invasor_alert(stored_nfc, nfc_tag, invasion_alert);
       // play something when enemy cat arrives?
     }
   }
+  else
+  {
+    Serial.println("Nenhuma ação detectada...");
+  }
 
-  delay(100);
+  delay(1000);
 }

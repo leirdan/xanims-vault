@@ -35,6 +35,16 @@ String rtc_get_formatted_hour()
   return String(buffer);
 }
 
+String rtc_get_iso_date()
+{
+  DateTime now = rtc_get_hour();
+  char buffer[20];
+  sprintf(buffer, "%04d-%02d-%02dT%02d:%02d:%02d",
+          now.year(), now.month(), now.day(),
+          now.hour(), now.minute(), now.second());
+  return String(buffer);
+}
+
 bool horarioBateComAlvo(uint8_t horaAlvo, uint8_t minutoAlvo)
 {
   DateTime now = rtc_get_hour();
