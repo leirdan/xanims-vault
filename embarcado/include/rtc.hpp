@@ -4,9 +4,9 @@
 #include <Arduino.h>
 #include <RTClib.h>
 
-void inicializarRtc();
-DateTime obterHorarioAtual();
-String obterHorarioFormatado();
+void rtc_init();
+DateTime rtc_get_hour();
+String rtc_get_formatted_hour();
 bool horarioBateComAlvo(uint8_t horaAlvo, uint8_t minutoAlvo);
 
 #endif

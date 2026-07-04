@@ -31,6 +31,14 @@ Payload:
 #### CAT/INTRUDER
 - Pub: embedded
 - Sub: strapi
+Payload:
+```json
+{
+    "nfc": "string",
+    "intruder": "string",
+    "date": "00:00:00"
+}
+```
 
 #### FEED/REGISTER
 
@@ -50,6 +58,7 @@ Payload:
     - docker exec -it xanims-mqtt mosquitto_passwd -b /mosquitto/config/pwfile embedded embedded 
 * Primeiro executar tudo via docker compose up --build
 * Depois logar no container do broker mosquitto
+* ao adicionar os users preciso restartar o docker?
 
 * Ref: https://github.com/sukesh-ak/setup-mosquitto-with-docker
  !---> 

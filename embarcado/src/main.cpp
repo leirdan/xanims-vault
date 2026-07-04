@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "container.hpp"
 #include "buzzer.hpp"
 #include "nfc.hpp"
 #include "rtc.hpp"
@@ -10,10 +11,10 @@
 #define NFC_SCL D2
 #define BUZZER_PIN D5
 
-#define WIFI_SSID "brisa-4886458"
-#define WIFI_SENHA "JycSSR8e"
-// #define WIFI_SSID "amo musica"
-// #define WIFI_SENHA "Th3Summ0n1ng"
+// #define WIFI_SSID "brisa-4886458"
+// #define WIFI_SENHA "JycSSR8e"
+#define WIFI_SSID "amo musica"
+#define WIFI_SENHA "Th3Summ0n1ng"
 
 unsigned long ultimoPrintHorario = 0;
 
@@ -23,7 +24,7 @@ void setup()
   Serial.println("Starting Xanim's Vault...");
 
   nfc_init(NFC_SDA, NFC_SCL);
-  // inicializarRtc();
+  rtc_init();
   MQTT_init();
   WiFi_init(WIFI_SSID, WIFI_SENHA);
 }
@@ -34,33 +35,46 @@ void loop()
   {
     ultimoPrintHorario = millis();
     // Serial.print("Horário atual: ");
-    // Serial.println(obterHorarioFormatado());
+    // Serial.println(rtc_get_formatted_hour());
   }
 
   MQTT_connect();
   mqtt.processPackets(100);
 
-  if (!mem_has_data())
+  String nfc_tag = nfc_read_tag();
+
+  if (!mem_has_data() && nfc_tag != "")
   {
-    String tagColeira = nfc_read_tag();
+    Serial.print("Tag lida: ");
+    Serial.println(nfc_tag);
 
-    if (tagColeira != "")
-    {
-      Serial.print("Tag lida: ");
-      Serial.println(tagColeira);
-
-      JsonDocument payload;
-      payload["nfc"] = tagColeira;
-      String raw_payload;
-      serializeJson(payload, raw_payload);
-      mqtt_cat_nfc.publish(raw_payload.c_str());
-      delay(2000);
+    JsonDocument payload;
+    payload["nfc"] = nfc_tag;
+    String raw_payload;
+    serializeJson(payload, raw_payload);
+    mqtt_cat_nfc.publish(raw_payload.c_str());
+    delay(2000);
   }
-  }
-  else {
+  else
+  {
     Serial.println("Tem dados! Skippando...");
-    mem_erase(); // COMENTAR QUANDO QUISER MANTER
-    // TODO: toda a lógica do idle
+    // mem_erase(); // COMENTAR QUANDO QUISER MANTER
+    String stored_nfc = mem_get_string(nfc_k);
+    if (stored_nfc == nfc_tag)
+    {
+      // check container state and opens if its open
+    }
+    else // handle intruder:
+    {
+      // if container is opened then closes it
+      container_toggle(true);
+      // esp sends invasion alert through mqtt topic to api
+      String invasion_alert = rtc_get_formatted_hour();
+      Serial.println("Hora da invasão: " + invasion_alert);
+
+      MQTT_send_invasor_alert(stored_nfc, nfc_tag, invasion_alert);
+      // play something when enemy cat arrives?
+    }
   }
 
   delay(100);

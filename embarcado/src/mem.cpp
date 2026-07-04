@@ -10,28 +10,34 @@ String hour4_k = "HOUR_4";
 String hour5_k = "HOUR_5";
 String hour6_k = "HOUR_6";
 
-// void mem_init() 
+// void mem_init()
 // {
 // }
 
-bool mem_has_data() {
-    if (!prefs.begin("xanims", true)) {
+// TODO: criar variáveis globais pra guardar essas infos e evitar degradar a flash.
+bool mem_has_data()
+{
+    if (!prefs.begin("xanims", true))
+    {
         Serial.println("Falha ao iniciar partição.");
         return false;
     }
 
     if (prefs.getString(nfc_k.c_str()).length() > 0 &&
-        prefs.getUInt(portion_k.c_str()) != 0) {
-            prefs.end();
-            return true;
-        }
-
+        prefs.getUInt(portion_k.c_str()) != 0)
+    {
         prefs.end();
-        return false;
+        return true;
+    }
+
+    prefs.end();
+    return false;
 }
 
-void mem_erase() {
-    if (!prefs.begin("xanims"))  {
+void mem_erase()
+{
+    if (!prefs.begin("xanims"))
+    {
         Serial.println("Falha ao iniciar partição.");
         return;
     }
@@ -41,14 +47,16 @@ void mem_erase() {
 }
 
 // TODO: dá pra aplicar template num embarcado?
-void mem_store_string(String key, String data) 
+void mem_store_string(String key, String data)
 {
-    if (!prefs.begin("xanims"))  {
+    if (!prefs.begin("xanims"))
+    {
         Serial.println("Falha ao iniciar partição.");
         return;
     }
 
-    if (prefs.putString(key.c_str(), data.c_str()) != 1) {
+    if (prefs.putString(key.c_str(), data.c_str()) != 1)
+    {
         Serial.println("Erro ao gravar.");
         prefs.end();
         return;
@@ -57,24 +65,28 @@ void mem_store_string(String key, String data)
     prefs.end();
 }
 
-void mem_store_int(String key, uint16_t data) {
-    if (!prefs.begin("xanims"))  {
+void mem_store_int(String key, uint16_t data)
+{
+    if (!prefs.begin("xanims"))
+    {
         Serial.println("Falha ao iniciar partição.");
         return;
     }
 
-    if (prefs.putUInt(key.c_str(), data) != 1) {
+    if (prefs.putUInt(key.c_str(), data) != 1)
+    {
         Serial.println("Erro ao gravar.");
         prefs.end();
         return;
     }
 
     prefs.end();
-
 }
 
-uint16_t mem_get_int(String key) {
-    if (!prefs.begin("xanims", true))  {
+uint16_t mem_get_int(String key)
+{
+    if (!prefs.begin("xanims", true))
+    {
         Serial.println("Falha ao iniciar partição.");
         return 0;
     }
@@ -84,8 +96,10 @@ uint16_t mem_get_int(String key) {
     return data;
 }
 
-String mem_get_string(String key) {
-    if (!prefs.begin("xanims", true))  {
+String mem_get_string(String key)
+{
+    if (!prefs.begin("xanims", true))
+    {
         Serial.println("Falha ao iniciar partição.");
         return "";
     }

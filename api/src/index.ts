@@ -106,14 +106,47 @@ export default {
             mqttClient.publish('cat/sync', syncPayload, () => {
               strapi.log.info("Payload de sincronização enviado ao embarcado.")
             })
-          break;
+            break;
           }
-          catch (err) { 
-          break;
+          catch (err) {
+            break;
           }
         }
 
         // TODO: elaborar os outros tópicos
+
+        case "cat/intruder": {
+          try {
+
+            const payload = JSON.parse(message.toString());
+            const nfc = payload.nfc;
+            const intruder = payload.intruder;
+            const date = payload.date;
+            if (!nfc) {
+              strapi.log.error("NFC do gato não veio.");
+              return;
+            }
+
+            const cat = await strapi.documents("api::cat.cat").findFirst({ filters: { nfc: nfc } });
+            const intrusion_alert = await strapi.documents("api::intrusion-alert.intrusion-alert").create({
+              data: {
+                cat: cat,
+                intruder_nfc: intruder,
+                date: date
+              }, status: 'published'
+            })
+
+            strapi.log.info(intrusion_alert);
+            strapi.log.info("Alerta de intrusão criado com sucesso.");
+
+            break;
+          }
+          catch (err) {
+            strapi.log.error("Alerta de intrusão não foi criado. ");
+            strapi.log.error(err);
+            break;
+          }
+        }
         default:
           strapi.log.error("Tópico não reconhecido.")
           break;

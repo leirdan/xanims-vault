@@ -24,6 +24,8 @@ void MQTT_connect();
 void MQTT_cat_sync_callback(char *data, uint16_t len);
 void MQTT_init();
 
+bool MQTT_send_invasor_alert(String &expected_nfc, String &nfc_intruder, String &timestamp);
+
 void enviarEventoAlimentacao(String tagGato, bool poteCorreto, float pesoConsumidoGramas, String horario);
 bool buscarHorariosAlimentacao(int horas[], int minutos[], int tamanhoMaximo, int &quantidadeEncontrada);
 
