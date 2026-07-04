@@ -36,7 +36,7 @@ const AddCatForm = (props: AddCatFormProps) => {
             }}
         >
             <Typography variant="h1" sx={{ fontSize: "1.8rem", mb: 3, color: "text.primary" }}>
-                Cadastrar Felino
+                Vincular Gato
             </Typography>
 
             {state?.message && (
@@ -61,14 +61,14 @@ const AddCatForm = (props: AddCatFormProps) => {
                     variant="outlined"
                     required
                     fullWidth
-                // InputLabelProps={{ shrink: true }}
+                    slotProps={{ inputLabel: { shrink: true } }}
                 />
 
                 <TextField
                     name="weight"
                     label="Peso (kg)"
                     type="number"
-                    // inputProps={{ step: "0.01" }}
+                    // slotProps={{ inputLabel: { shrink: true }, input: { step: "0.01" } }} # TODO: ajeitar pra aceitar decimais
                     variant="outlined"
                     required
                     fullWidth

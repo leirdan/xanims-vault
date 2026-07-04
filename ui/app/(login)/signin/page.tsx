@@ -15,7 +15,7 @@ const SignIn = (): JSX.Element => {
       flexDirection: "column"
     }}
   >
-    <Typography variant="h2"> Xanim's Vault Login </Typography>
+    <Typography variant="h2" sx={{ marginBottom: 3 }}> Xanim's Vault Login </Typography>
     <SignInForm />
   </Box>)
 
