@@ -621,8 +621,8 @@ export interface ApiIntrusionAlertIntrusionAlert
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    date: Schema.Attribute.DateTime;
-    intruder_nfc: Schema.Attribute.UID;
+    date: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    intruder_nfc: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

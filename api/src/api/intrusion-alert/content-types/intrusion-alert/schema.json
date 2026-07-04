@@ -16,11 +16,13 @@
       "relation": "oneToOne",
       "target": "api::cat.cat"
     },
-    "intruder_nfc": {
-      "type": "uid"
-    },
     "date": {
-      "type": "datetime"
+      "type": "datetime",
+      "required": true
+    },
+    "intruder_nfc": {
+      "type": "string",
+      "required": true
     }
   }
 }
