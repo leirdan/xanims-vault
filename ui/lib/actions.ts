@@ -27,7 +27,8 @@ export async function SignIn(prevState: any, formData: FormData) {
 
         const store = await cookies();
         store.set("token", data.jwt); // TODO: setar um tempo de expiração?
-        store.set("userId", data.user.documentId);
+        store.set("userDocumentId", data.user.documentId);
+        store.set("userId", data.user.id);
 
         success = true;
     }
@@ -43,7 +44,7 @@ export async function SignIn(prevState: any, formData: FormData) {
 export async function GetCats(): Promise<Cat[]> {
     try {
         const auth = await getAuth();
-        const response = await client.fetch(`${CATS}?populate=*`, {
+        const response = await client.fetch(`${CATS}?populate=*&filters[user][documentId][$eq]=${auth.userDocumentId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -96,7 +97,7 @@ export async function AddCat(prevState: any, formData: FormData) {
             weight: parseFloat(formData.get("weight") as string),
             neutered: formData.get("neutered") === "true",
             nfc: null,
-            user: auth.userId,
+            user: auth.userDocumentId,
             life_stage_factor: formData.get("life_stage_factor_id")
         };
         const response = await client.fetch(CATS, {
@@ -119,11 +120,12 @@ export async function AddCat(prevState: any, formData: FormData) {
     }
 }
 
-async function getAuth(): Promise<{ jwt: string, userId: string }> {
+async function getAuth(): Promise<{ jwt: string, userDocumentId: string, userId: string }> {
     const store = await cookies();
-    let jwt: string = "", userId: string = ""
+    let jwt: string = "", userId: string = "", userDocumentId: string = ""
     if (store.get("token")) jwt = store.get("token")?.value || ""
     if (store.get("userId")) userId = store.get("userId")?.value || ""
+    if (store.get("userDocumentId")) userDocumentId = store.get("userDocumentId")?.value || ""
 
-    return { jwt, userId }
+    return { jwt, userDocumentId, userId }
 }

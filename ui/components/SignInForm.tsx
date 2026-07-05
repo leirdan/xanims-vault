@@ -28,7 +28,7 @@ const SignInForm = () => {
                 {isPending ? (
                     <CircularProgress size={24} sx={{ color: "primary.contrastText" }} />
                 ) : (
-                    "Enviar"
+                    "Entrar"
                 )}</Button>
         </Box>
     </>

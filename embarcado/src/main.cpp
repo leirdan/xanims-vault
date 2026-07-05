@@ -88,6 +88,10 @@ void loop()
       // play something when enemy cat arrives?
     }
   }
+  else if (is_feeding_time())
+  {
+    Serial.println("Horário de alimentar.");
+  }
   else
   {
     Serial.println("Nenhuma ação detectada...");
