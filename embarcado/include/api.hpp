@@ -7,8 +7,8 @@
 #include "Adafruit_MQTT_Client.h"
 #include "wifi.hpp"
 
-#define API_BASE_URL "http://192.168.1.67:3000"
-#define MQTT_SERVER_IP "192.168.1.67"
+#define API_BASE_URL "http://192.168.0.2:3000"
+#define MQTT_SERVER_IP "192.168.0.2"
 #define MQTT_SERVER_PORT 1883
 #define MQTT_USERNAME "embedded"
 #define MQTT_PASSWORD "embedded"
