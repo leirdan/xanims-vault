@@ -1,4 +1,5 @@
 #include "rtc.hpp"
+#include "mem.hpp"
 
 RTC_DS3231 rtc;
 
@@ -43,6 +44,31 @@ String rtc_get_iso_date()
           now.year(), now.month(), now.day(),
           now.hour(), now.minute(), now.second());
   return String(buffer);
+}
+
+bool is_feeding_time()
+{
+  DateTime now = rtc_get_hour();
+  char current_time_str[6];
+  sprintf(current_time_str, "%02d:%02d", now.hour(), now.minute());
+  String keys[] = {hour1_k, hour2_k, hour3_k, hour4_k, hour5_k, hour6_k};
+
+  for (int i = 0; i < 6; i++)
+  {
+    String stored_time = mem_get_string(keys[i]);
+    Serial.print("Horário armazenado: ");
+    Serial.println(stored_time);
+
+    if (stored_time.length() >= 5)
+    {
+      if (stored_time.substring(0, 5) == String(current_time_str))
+      {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 bool horarioBateComAlvo(uint8_t horaAlvo, uint8_t minutoAlvo)
