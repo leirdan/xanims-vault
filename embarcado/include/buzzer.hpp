@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 
-void tocarMusica(int pinoBuzzer);
+void buzzer_init(int pino);
+void buzzerTocarMario();
 
 #endif
