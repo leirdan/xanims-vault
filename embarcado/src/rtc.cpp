@@ -56,9 +56,6 @@ bool is_feeding_time()
   for (int i = 0; i < 6; i++)
   {
     String stored_time = mem_get_string(keys[i]);
-    Serial.print("Horário armazenado: ");
-    Serial.println(stored_time);
-
     if (stored_time.length() >= 5)
     {
       if (stored_time.substring(0, 5) == String(current_time_str))
@@ -69,10 +66,4 @@ bool is_feeding_time()
   }
 
   return false;
-}
-
-bool horarioBateComAlvo(uint8_t horaAlvo, uint8_t minutoAlvo)
-{
-  DateTime now = rtc_get_hour();
-  return now.hour() == horaAlvo && now.minute() == minutoAlvo;
 }

@@ -156,8 +156,8 @@ const EditCatForm = ({ cat, lifeStageFactors }: EditCatFormProps) => {
                         slotProps={{
                             htmlInput: { step: "0.01", min: "0" }
                         }}
-                        required
                         fullWidth
+                        required
                     />
 
                     <FormControl fullWidth required>

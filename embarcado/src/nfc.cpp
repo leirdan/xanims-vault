@@ -23,13 +23,13 @@ String nfc_read_tag()
 
     if (nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 100))
     {
-        String codigoTag = "";
+        String tag = "";
         for (uint8_t i = 0; i < uidLength; i++)
         {
-            codigoTag += String(uid[i], HEX);
+            tag += String(uid[i], HEX);
         }
-        codigoTag.toUpperCase();
-        return codigoTag;
+        tag.toUpperCase();
+        return tag;
     }
     return "";
 }

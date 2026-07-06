@@ -26,6 +26,7 @@ void setup()
   Serial.begin(115200);
   Serial.println("Starting Xanim's Vault...");
 
+  // mem_erase();
   nfc_init(NFC_SDA, NFC_SCL);
   rtc_init();
   buzzer_init(BUZZER_PIN);
@@ -50,18 +51,18 @@ void loop()
   Serial.print("Tag lida: ");
   Serial.println(nfc_tag);
 
-  if (!mem_has_data() && nfc_tag != "")
+  if (nfc_tag != "")
+  {
+    if (!mem_has_data())
   {
     JsonDocument payload;
     payload["nfc"] = nfc_tag;
     String raw_payload;
     serializeJson(payload, raw_payload);
     mqtt_cat_nfc.publish(raw_payload.c_str());
-    delay(2000);
   }
-  else if (nfc_tag != "")
+    else
   {
-    // mem_erase(); // COMENTAR QUANDO QUISER MANTER
     String stored_nfc = mem_get_string(nfc_k);
     Serial.print("Tag guardada: ");
     Serial.println(stored_nfc);
@@ -83,14 +84,16 @@ void loop()
       buzzer_play_mario_death();
     }
   }
-  else if (is_feeding_time())
-  {
-    Serial.println("Horário de alimentar.");
-  }
-  else
-  {
-    Serial.println("Nenhuma ação detectada.");
   }
 
-  delay(1000);
+  if (is_feeding_time() && mem_has_data())
+  {
+    Serial.println("Horário de alimentar.");
+    String nfc = mem_get_string(nfc_k);
+    String date = rtc_get_iso_date();
+    if (MQTT_register_feed(nfc, mem_get_int(portion_k), date))
+    {
+      container_toggle(true);
+  }
+  }
 }

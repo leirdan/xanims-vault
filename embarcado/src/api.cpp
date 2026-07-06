@@ -94,3 +94,20 @@ bool MQTT_send_invasor_alert(String &expected_nfc, String &nfc_intruder, String 
   Serial.println("Invasor registrado com sucesso.");
   return true;
 }
+
+bool MQTT_register_feed(String &nfc, uint8_t amount, String &timestamp)
+{
+  char buffer[150];
+  JsonDocument payload;
+  payload["nfc"] = nfc;
+  payload["amount"] = amount;
+  payload["date"] = timestamp;
+  serializeJson(payload, buffer, sizeof(buffer));
+  if (!mqtt_feed_register.publish(buffer))
+  {
+    Serial.println("Falha ao publicar no MQTT...");
+    return false;
+  }
+  Serial.println("Consumo registrado com sucesso.");
+  return true;
+}

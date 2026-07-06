@@ -7,6 +7,5 @@
 extern WiFiClient wifi_client;
 
 void WiFi_init(const char *ssid, const char *password);
-bool wifiConectado();
 
 #endif

@@ -24,6 +24,7 @@ void MQTT_connect();
 void MQTT_cat_sync_callback(char *data, uint16_t len);
 void MQTT_init();
 
+bool MQTT_register_feed(String &nfc, uint8_t amount, String &timestamp);
 bool MQTT_send_invasor_alert(String &expected_nfc, String &nfc_intruder, String &timestamp);
 
 #endif

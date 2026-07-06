@@ -81,6 +81,7 @@ void mem_erase()
     stored_hour_5 = "";
     stored_hour_6 = "";
     cache = false;
+    Serial.println("Cache limpa.");
 }
 
 void mem_store_string(String key, String data)
