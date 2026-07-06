@@ -36,7 +36,7 @@ Payload:
 {
     "nfc": "string",
     "intruder": "string",
-    "date": "00:00:00"
+    "date": "iso_date"
 }
 ```
 
@@ -44,6 +44,14 @@ Payload:
 
 - Pub: embedded
 - Sub: strapi
+Payload:
+```json
+{
+    "nfc": "string",
+    "amount": number,
+    "date": "iso_date"
+}
+```
 
 ## Configuração Docker
 
