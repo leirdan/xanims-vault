@@ -91,7 +91,7 @@ void mem_store_string(String key, String data)
         return;
     }
 
-    if (prefs.putString(key.c_str(), data.c_str()) != 1)
+    if (prefs.putString(key.c_str(), data.c_str()) == 0)
     {
         Serial.println("Erro ao gravar.");
         prefs.end();
@@ -137,7 +137,7 @@ void mem_store_int(String key, uint16_t data)
         return;
     }
 
-    if (prefs.putUInt(key.c_str(), data) != 1)
+    if (prefs.putUInt(key.c_str(), data) == 0)
     {
         Serial.println("Erro ao gravar.");
         prefs.end();
