@@ -6,12 +6,12 @@ import { redirect } from "next/navigation";
 import { AUTH, HOMEPAGE, CATS, FACTORS, DIETS, DIET_SCHEDULES, CONSUMPTIONS, INTRUSION_ALERTS, catRegenerateDietPath } from "./constants";
 
 const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  process.env.API_URL ||
-  "http://api:1337";
+    process.env.NEXT_PUBLIC_API_URL ||
+    process.env.API_URL ||
+    "http://api:1337";
 
 const client = strapi({
-  baseURL: `${API_URL}/api`,
+    baseURL: `${API_URL}/api`,
 });
 
 export async function SignIn(prevState: any, formData: FormData) {
@@ -139,9 +139,6 @@ export async function AddCat(prevState: any, formData: FormData) {
     }
 }
 
-// Diet e DietSchedule são relações unidirecionais (só existem a partir da
-// dieta/horário apontando pro gato), então não dá pra populá-las a partir
-// do /cats. Por isso buscamos tudo e cruzamos no servidor.
 export async function GetCatsWithDetails(): Promise<CatDetails[]> {
     try {
         const auth = await getAuth();

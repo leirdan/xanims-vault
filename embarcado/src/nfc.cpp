@@ -4,16 +4,16 @@ Adafruit_PN532 nfc(-1, -1);
 
 void nfc_init(int pinoSda, int pinoScl)
 {
-  Wire.begin(pinoSda, pinoScl);
-  nfc.begin();
-  if (!nfc.getFirmwareVersion())
-  {
-    Serial.println("Placa NFC não encontrado!");
-    while (1)
-      ;
-  }
-  Serial.println("Aguardando por uma tag NFC...");
-  nfc.SAMConfig();
+    Wire.begin(pinoSda, pinoScl);
+    nfc.begin();
+    if (!nfc.getFirmwareVersion())
+    {
+        Serial.println("Placa NFC não encontrado!");
+        while (1)
+            ;
+    }
+    Serial.println("Aguardando por uma tag NFC...");
+    nfc.SAMConfig();
 }
 
 String nfc_read_tag()

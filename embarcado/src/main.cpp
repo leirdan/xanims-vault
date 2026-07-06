@@ -48,6 +48,7 @@ void loop()
   mqtt.processPackets(10);
 
   String nfc_tag = nfc_read_tag();
+
   if (nfc_tag != "")
   {
     Serial.print("Tag lida: ");

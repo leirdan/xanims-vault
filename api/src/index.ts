@@ -67,6 +67,9 @@ export default {
             const cats = await strapi.documents("api::cat.cat").findMany({
               sort: "createdAt:desc",
               limit: 1,
+              filters: {
+                nfc: null
+              }
             });
 
             const cat = cats.length > 0 ? cats[0] : null;

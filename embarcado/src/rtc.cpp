@@ -48,6 +48,7 @@ String rtc_get_iso_date()
 
 bool is_feeding_time()
 {
+  // return true;
   DateTime now = rtc_get_hour();
   char current_time_str[6];
   sprintf(current_time_str, "%02d:%02d", now.hour(), now.minute());

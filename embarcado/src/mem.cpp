@@ -185,6 +185,7 @@ String mem_get_string(String key)
 
     if (key == nfc_k)
     {
+        // return String("1002");
         return stored_nfc;
     }
     else if (key == hour1_k)
