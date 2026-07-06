@@ -5,7 +5,7 @@
 #include <Servo.h>
 
 void servo_init(int porta);
-void servoFechar();
-void servoAbrir();
+void servo_close();
+void servo_open();
 
 #endif

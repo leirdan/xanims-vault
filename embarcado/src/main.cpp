@@ -7,6 +7,7 @@
 #include "api.hpp"
 #include "mem.hpp"
 #include "servo.hpp"
+#include "container.hpp"
 
 #define NFC_SDA D1
 #define NFC_SCL D2
@@ -28,8 +29,8 @@ void setup()
   nfc_init(NFC_SDA, NFC_SCL);
   rtc_init();
   buzzer_init(BUZZER_PIN);
-  // WiFi_init(WIFI_SSID, WIFI_SENHA);
-  // MQTT_init();
+  WiFi_init(WIFI_SSID, WIFI_SENHA);
+  MQTT_init();
   servo_init(SERVO_PIN);
 }
 
@@ -42,50 +43,44 @@ void loop()
     Serial.println(rtc_get_formatted_hour());
   }
 
-  // MQTT_connect();
-  // mqtt.processPackets(10);
+  MQTT_connect();
+  mqtt.processPackets(10);
 
   String nfc_tag = nfc_read_tag();
+  Serial.print("Tag lida: ");
+  Serial.println(nfc_tag);
 
   if (!mem_has_data() && nfc_tag != "")
   {
-    Serial.print("Tag lida: ");
-    Serial.println(nfc_tag);
-
     JsonDocument payload;
     payload["nfc"] = nfc_tag;
     String raw_payload;
     serializeJson(payload, raw_payload);
-    // mqtt_cat_nfc.publish(raw_payload.c_str());
+    mqtt_cat_nfc.publish(raw_payload.c_str());
     delay(2000);
   }
   else if (nfc_tag != "")
   {
     // mem_erase(); // COMENTAR QUANDO QUISER MANTER
     String stored_nfc = mem_get_string(nfc_k);
-    Serial.print("Stored NFC: ");
+    Serial.print("Tag guardada: ");
     Serial.println(stored_nfc);
-    Serial.print("Read NFC: ");
-    Serial.println(nfc_tag);
     if (stored_nfc == nfc_tag)
     {
       Serial.println("Autorizado.");
-      servoAbrir();
-      buzzerTocarMario();
-      // check container state and opens if its open
+      container_toggle(false);
+      buzzer_play_mario();
     }
-    else // handle intruder:
+    else
     {
-      servoFechar();
-      // if container is opened then closes it
+      Serial.println("Invasão detectada! ");
       container_toggle(true);
-      // esp sends invasion alert through mqtt topic to api
       String invasion_alert = rtc_get_iso_date();
       Serial.print("Hora da invasão: ");
       Serial.println(invasion_alert);
 
-      // MQTT_send_invasor_alert(stored_nfc, nfc_tag, invasion_alert);
-      // play something when enemy cat arrives?
+      MQTT_send_invasor_alert(stored_nfc, nfc_tag, invasion_alert);
+      buzzer_play_mario_death();
     }
   }
   else if (is_feeding_time())
@@ -94,7 +89,7 @@ void loop()
   }
   else
   {
-    Serial.println("Nenhuma ação detectada...");
+    Serial.println("Nenhuma ação detectada.");
   }
 
   delay(1000);

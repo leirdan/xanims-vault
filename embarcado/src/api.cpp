@@ -53,20 +53,23 @@ void MQTT_cat_sync_callback(char *data, uint16_t len)
   }
 
   String nfc = String(document["nfc"]);
-  uint16_t portion = document["portion"];
+  uint16_t portion = (uint16_t)document["portion"];
   JsonArray hours = document["hours"];
 
   mem_store_string(nfc_k, nfc);
   mem_store_int(portion_k, portion);
-
-  for (size_t i = 0; i < hours.size(); i++)
-  {
-    mem_store_string(String("HOUR_" + i + 1), hours[i]);
-  }
-
-  Serial.println("Dados salvos: ");
-  Serial.println(mem_get_string(nfc_k));
-  Serial.println(mem_get_int(portion_k));
+  if (hours.size() > 0 && !hours[0].isNull())
+    mem_store_string(hour1_k, hours[0].as<String>());
+  if (hours.size() > 1 && !hours[1].isNull())
+    mem_store_string(hour2_k, hours[1].as<String>());
+  if (hours.size() > 2 && !hours[2].isNull())
+    mem_store_string(hour3_k, hours[2].as<String>());
+  if (hours.size() > 3 && !hours[3].isNull())
+    mem_store_string(hour4_k, hours[3].as<String>());
+  if (hours.size() > 4 && !hours[4].isNull())
+    mem_store_string(hour5_k, hours[4].as<String>());
+  if (hours.size() > 5 && !hours[5].isNull())
+    mem_store_string(hour6_k, hours[5].as<String>());
 }
 
 void MQTT_init()
@@ -89,104 +92,5 @@ bool MQTT_send_invasor_alert(String &expected_nfc, String &nfc_intruder, String 
     return false;
   }
   Serial.println("Invasor registrado com sucesso.");
-  return true;
-}
-
-void enviarEventoAlimentacao(String tagGato, bool poteCorreto, float pesoConsumidoGramas, String horario)
-{
-  /*
-  if (!wifiConectado())
-  {
-    Serial.println("Sem WiFi, não foi possível enviar o evento ao backend.");
-    return;
-  }
-
-  WiFiClient client;
-  HTTPClient http;
-
-  http.begin(client, String(API_BASE_URL) + "/eventos-alimentacao");
-  http.addHeader("Content-Type", "application/json");
-
-  JsonDocument corpo;
-  corpo["tagGato"] = tagGato;
-  corpo["poteCorreto"] = poteCorreto;
-  corpo["pesoConsumidoGramas"] = pesoConsumidoGramas;
-  corpo["horario"] = horario;
-
-  String corpoJson;
-  serializeJson(corpo, corpoJson);
-
-  int codigoResposta = http.POST(corpoJson);
-
-  if (codigoResposta > 0)
-  {
-    Serial.print("Evento enviado ao backend, resposta: ");
-    Serial.println(codigoResposta);
-  }
-  else
-  {
-    Serial.print("Falha ao enviar evento ao backend: ");
-    Serial.println(http.errorToString(codigoResposta));
-  }
-
-  http.end();
-  */
-}
-
-bool buscarHorariosAlimentacao(int horas[], int minutos[], int tamanhoMaximo, int &quantidadeEncontrada)
-{
-  // Comentei pq o wificlient tá interfwerindo
-  /*
-  quantidadeEncontrada = 0;
-
-  if (!wifiConectado())
-  {
-    Serial.println("Sem WiFi, não foi possível buscar os horários no backend.");
-    return false;
-  }
-
-  WiFiClient client;
-  HTTPClient http;
-
-  http.begin(client, String(API_BASE_URL) + "/horarios-alimentacao");
-  int codigoResposta = http.GET();
-
-  if (codigoResposta != 200)
-  {
-    Serial.print("Falha ao buscar horários no backend: ");
-    Serial.println(codigoResposta);
-    http.end();
-    return false;
-  }
-
-  String corpoResposta = http.getString();
-  http.end();
-
-  JsonDocument documento;
-  DeserializationError erro = deserializeJson(documento, corpoResposta);
-
-  if (erro)
-  {
-    Serial.print("Erro ao interpretar JSON dos horários: ");
-    Serial.println(erro.c_str());
-    return false;
-  }
-
-  JsonArray horarios = documento.as<JsonArray>();
-
-  for (JsonObject horario : horarios)
-  {
-    if (quantidadeEncontrada >= tamanhoMaximo)
-    {
-      break;
-    }
-
-    horas[quantidadeEncontrada] = horario["hora"];
-    minutos[quantidadeEncontrada] = horario["minuto"];
-    quantidadeEncontrada++;
-  }
-
-  return true;
-  */
   return true;
 }

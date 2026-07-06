@@ -1,45 +1,69 @@
 #include "buzzer.hpp"
 
-int pinoBuzzer;
+uint8_t buzzer_pin;
 
-void buzzer_init(int pino)
+void buzzer_init(uint8_t pin)
 {
-    pinoBuzzer = pino;
-    pinMode(pinoBuzzer, OUTPUT);
-    digitalWrite(pinoBuzzer, LOW);
+    buzzer_pin = pin;
+    pinMode(buzzer_pin, OUTPUT);
+    digitalWrite(buzzer_pin, LOW);
 }
 
-void buzzerBipar(int duracaoMs)
+void buzzer_bip(int duracaoMs)
 {
-    digitalWrite(pinoBuzzer, HIGH);
+    digitalWrite(buzzer_pin, HIGH);
     delay(duracaoMs);
-    digitalWrite(pinoBuzzer, LOW);
+    digitalWrite(buzzer_pin, LOW);
 }
 
-void buzzerTocarMario()
+void buzzer_play_mario()
 {
-    int duracoes[] = {
-        100, 100, 0,     100,
-        0,   100, 100,   0,
-        100, 0,   0,     0,
-        100, 0,   0,     0
-    };
+    uint8_t durations[] = {
+        100, 100, 0, 100,
+        0, 100, 100, 0,
+        100, 0, 0, 0,
+        100, 0, 0, 0};
 
-    int pausas[] = {
-        100, 100, 100,   100,
-        100, 100, 100,   100,
-        100, 100, 100,   100,
-        100, 100, 100,   100
-    };
+    uint8_t pauses[] = {
+        100, 100, 100, 100,
+        100, 100, 100, 100,
+        100, 100, 100, 100,
+        100, 100, 100, 100};
 
-    int tamanho = sizeof(duracoes) / sizeof(int);
+    int size = sizeof(durations) / sizeof(int);
 
-    for (int i = 0; i < tamanho; i++)
+    for (int i = 0; i < size; i++)
     {
-        if (duracoes[i] > 0)
+        if (durations[i] > 0)
         {
-            buzzerBipar(duracoes[i]);
+            buzzer_bip(durations[i]);
         }
-        delay(pausas[i]);
+        delay(pauses[i]);
+    }
+}
+
+void buzzer_play_mario_death()
+{
+    uint8_t durations[] = {
+        80, 80, 80, 0,
+        60, 60, 60, 0,
+        120, 0, 120, 0,
+        100, 100, 250};
+
+    uint8_t pauses[] = {
+        50, 50, 50, 100,
+        40, 40, 40, 80,
+        80, 60, 80, 150,
+        100, 100, 50};
+
+    int size = sizeof(durations) / sizeof(int);
+
+    for (int i = 0; i < size; i++)
+    {
+        if (durations[i] > 0)
+        {
+            buzzer_bip(durations[i]);
+        }
+        delay(pauses[i]);
     }
 }

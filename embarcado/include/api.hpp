@@ -26,7 +26,4 @@ void MQTT_init();
 
 bool MQTT_send_invasor_alert(String &expected_nfc, String &nfc_intruder, String &timestamp);
 
-void enviarEventoAlimentacao(String tagGato, bool poteCorreto, float pesoConsumidoGramas, String horario);
-bool buscarHorariosAlimentacao(int horas[], int minutos[], int tamanhoMaximo, int &quantidadeEncontrada);
-
 #endif
