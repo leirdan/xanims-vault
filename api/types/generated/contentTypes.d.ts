@@ -456,6 +456,7 @@ export interface ApiCatCat extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     deleted_at: Schema.Attribute.DateTime;
+    feeding_hours: Schema.Attribute.JSON & Schema.Attribute.Required;
     life_stage_factor: Schema.Attribute.Relation<
       'oneToOne',
       'api::life-stage-factor.life-stage-factor'

@@ -17,7 +17,7 @@ import {
     Divider,
     Stack,
 } from "@mui/material";
-import SyncIcon from '@mui/icons-material/Sync';
+import SyncIcon from "@mui/icons-material/Sync";
 import { useActionState, useState } from "react";
 
 interface EditCatFormProps {
@@ -27,22 +27,54 @@ interface EditCatFormProps {
 
 const initialState = { success: false, message: "" };
 
+const DEFAULT_HOURS = [
+    "08:00",
+    "11:00",
+    "14:00",
+    "17:00",
+    "19:00",
+    "22:00",
+];
+
 const EditCatForm = ({ cat, lifeStageFactors }: EditCatFormProps) => {
     const [state, formAction, isPending] = useActionState(UpdateCat, initialState);
-    const [dietState, setDietState] = useState<{ success: boolean; message: string } | null>(null);
+
+    const [dietState, setDietState] = useState<{
+        success: boolean;
+        message: string;
+    } | null>(null);
+
     const [isRegenerating, setIsRegenerating] = useState(false);
 
-    // Garante que o campo sempre receba uma data válida
     const [birthDate, setBirthDate] = useState(
         cat.birth_date?.substring(0, 10) || ""
     );
 
-    console.log("Cat recebido:", cat);
-    console.log("Birth date inicial:", cat.birth_date);
+    const [feedingHours, setFeedingHours] = useState<string[]>(
+        cat.feeding_hours?.length
+            ? cat.feeding_hours.map((h: string) => h.substring(0, 5))
+            : [
+                DEFAULT_HOURS[0],
+                DEFAULT_HOURS[2],
+                DEFAULT_HOURS[4],
+            ]
+    );
+
+    const handleMealsChange = (amount: number) => {
+        setFeedingHours(DEFAULT_HOURS.slice(0, amount));
+    };
+
+    const handleHourChange = (index: number, value: string) => {
+        const updated = [...feedingHours];
+        updated[index] = value;
+        setFeedingHours(updated);
+    };
 
     const handleRegenerateDiet = async () => {
         setIsRegenerating(true);
+
         const result = await RegenerateDiet(cat.documentId);
+
         setDietState(result);
         setIsRegenerating(false);
     };
@@ -54,29 +86,35 @@ const EditCatForm = ({ cat, lifeStageFactors }: EditCatFormProps) => {
                 sx={{
                     p: 4,
                     backgroundColor: "background.paper",
-                    borderRadius: "8px"
+                    borderRadius: 2,
                 }}
             >
-                <Typography variant="h1" sx={{ fontSize: "1.8rem", mb: 3 }}>
+                <Typography
+                    variant="h1"
+                    sx={{
+                        fontSize: "1.8rem",
+                        mb: 3,
+                    }}
+                >
                     Editar {cat.name}
                 </Typography>
 
                 {state?.message && (
-                    <Alert severity={state.success ? "success" : "error"} sx={{ mb: 3 }}>
+                    <Alert
+                        severity={state.success ? "success" : "error"}
+                        sx={{ mb: 3 }}
+                    >
                         {state.message}
                     </Alert>
                 )}
 
                 <Box
                     component="form"
-                    action={(formData) => {
-                        console.log("Data enviada:", formData.get("birth_date"));
-                        return formAction(formData);
-                    }}
+                    action={formAction}
                     sx={{
                         display: "flex",
                         flexDirection: "column",
-                        gap: 3
+                        gap: 3,
                     }}
                 >
                     <input
@@ -89,8 +127,8 @@ const EditCatForm = ({ cat, lifeStageFactors }: EditCatFormProps) => {
                         name="name"
                         label="Nome do Gato"
                         defaultValue={cat.name}
-                        fullWidth
                         required
+                        fullWidth
                     />
 
                     <TextField
@@ -98,13 +136,16 @@ const EditCatForm = ({ cat, lifeStageFactors }: EditCatFormProps) => {
                         label="Data de Nascimento"
                         type="date"
                         value={birthDate}
-                        onChange={(e) => {
-                            console.log("Nova data:", e.target.value);
-                            setBirthDate(e.target.value);
+                        onChange={(e) =>
+                            setBirthDate(e.target.value)
+                        }
+                        slotProps={{
+                            inputLabel: {
+                                shrink: true,
+                            },
                         }}
-                        slotProps={{ inputLabel: { shrink: true } }}
-                        fullWidth
                         required
+                        fullWidth
                     />
 
                     <TextField
@@ -112,20 +153,24 @@ const EditCatForm = ({ cat, lifeStageFactors }: EditCatFormProps) => {
                         label="Peso (kg)"
                         type="number"
                         defaultValue={cat.weight}
-                        fullWidth
+                        slotProps={{
+                            htmlInput: { step: "0.01", min: "0" }
+                        }}
                         required
+                        fullWidth
                     />
 
                     <FormControl fullWidth required>
-                        <InputLabel id="life-stage-label">
+                        <InputLabel>
                             Fase de Vida
                         </InputLabel>
 
                         <Select
-                            labelId="life-stage-label"
                             name="life_stage_factor_id"
                             label="Fase de Vida"
-                            defaultValue={cat.life_stage_factor?.documentId || ""}
+                            defaultValue={
+                                cat.life_stage_factor?.documentId || ""
+                            }
                         >
                             {lifeStageFactors.map((factor) => (
                                 <MenuItem
@@ -149,6 +194,64 @@ const EditCatForm = ({ cat, lifeStageFactors }: EditCatFormProps) => {
                         label="O gato é castrado?"
                     />
 
+                    <FormControl fullWidth>
+                        <InputLabel>
+                            Refeições por dia
+                        </InputLabel>
+
+                        <Select
+                            value={feedingHours.length}
+                            label="Refeições por dia"
+                            onChange={(e) =>
+                                handleMealsChange(Number(e.target.value))
+                            }
+                        >
+                            <MenuItem value={3}>
+                                3 refeições
+                            </MenuItem>
+
+                            <MenuItem value={4}>
+                                4 refeições
+                            </MenuItem>
+
+                            <MenuItem value={6}>
+                                6 refeições
+                            </MenuItem>
+                        </Select>
+                    </FormControl>
+
+                    <Typography variant="h6">
+                        Horários de alimentação
+                    </Typography>
+
+                    {feedingHours.map((hour, index) => (
+                        <Box key={index}>
+                            <TextField
+                                label={`Horário ${index + 1}`}
+                                type="time"
+                                value={hour}
+                                fullWidth
+                                onChange={(e) =>
+                                    handleHourChange(
+                                        index,
+                                        e.target.value
+                                    )
+                                }
+                                slotProps={{
+                                    inputLabel: {
+                                        shrink: true,
+                                    },
+                                }}
+                            />
+
+                            <input
+                                type="hidden"
+                                name="feeding_hours"
+                                value={`${hour}:00`}
+                            />
+                        </Box>
+                    ))}
+
                     <Button
                         type="submit"
                         variant="contained"
@@ -161,17 +264,35 @@ const EditCatForm = ({ cat, lifeStageFactors }: EditCatFormProps) => {
                 </Box>
             </Paper>
 
-            <Paper elevation={4} sx={{ p: 4 }}>
-                <Typography variant="h2" sx={{ fontSize: "1.2rem", mb: 1 }}>
+            <Paper
+                elevation={4}
+                sx={{ p: 4 }}
+            >
+                <Typography
+                    variant="h2"
+                    sx={{
+                        fontSize: "1.2rem",
+                        mb: 1,
+                    }}
+                >
                     Dieta
                 </Typography>
 
-                <Typography variant="body2" sx={{ mb: 2 }}>
+                <Typography
+                    variant="body2"
+                    sx={{ mb: 2 }}
+                >
                     Recalcula a porção e os horários com base nos dados atuais do gato.
                 </Typography>
 
                 {dietState?.message && (
-                    <Alert severity={dietState.success ? "success" : "error"}>
+                    <Alert
+                        severity={
+                            dietState.success
+                                ? "success"
+                                : "error"
+                        }
+                    >
                         {dietState.message}
                     </Alert>
                 )}

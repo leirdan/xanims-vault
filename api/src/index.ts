@@ -110,7 +110,7 @@ export default {
 
             // TODO: ver se o gato já tem NFC e tratar isso?
 
-            const syncPayload = JSON.stringify({ nfc, portion: diet.portion, hours });
+            const syncPayload = JSON.stringify({ nfc, portion: Math.trunc(diet.portion), hours });
             strapi.log.info(`Sync payload: ${syncPayload}`);
             mqttClient.publish("cat/sync", syncPayload, () => {
               strapi.log.info("Payload de sincronização enviado ao embarcado.");

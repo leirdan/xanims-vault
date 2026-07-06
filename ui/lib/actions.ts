@@ -102,6 +102,10 @@ export async function GetLifeStageFactors(): Promise<LifeStageFactor[]> {
 export async function AddCat(prevState: any, formData: FormData) {
     try {
         const auth = await getAuth();
+        const feedingHours = formData
+            .getAll("feeding_hours")
+            .map(String);
+
         const body = {
             name: formData.get("name"),
             birth_date: formData.get("birth_date"),
@@ -109,8 +113,12 @@ export async function AddCat(prevState: any, formData: FormData) {
             neutered: formData.get("neutered") === "true",
             nfc: null,
             user: auth.userDocumentId,
-            life_stage_factor: formData.get("life_stage_factor_id")
+            life_stage_factor: formData.get("life_stage_factor_id"),
+            feeding_hours: feedingHours,
         };
+
+        console.log("=== ADD CAT ===");
+        console.log(body);
         const response = await client.fetch(CATS, {
             method: "POST",
             headers: {
@@ -178,12 +186,17 @@ export async function UpdateCat(prevState: any, formData: FormData) {
 
         const documentId = formData.get("documentId") as string;
 
+        const feedingHours = formData
+            .getAll("feeding_hours")
+            .map(String);
+
         const body = {
             name: formData.get("name"),
             birth_date: formData.get("birth_date"),
             weight: parseFloat(formData.get("weight") as string),
             neutered: formData.get("neutered") === "true",
             life_stage_factor: formData.get("life_stage_factor_id"),
+            feeding_hours: feedingHours,
         };
 
         console.log("=== UPDATE CAT ===");

@@ -42,7 +42,11 @@
       "type": "uid"
     },
     "deleted_at": {
-      "type": "datetime"
+  "type": "datetime"
+    },
+    "feeding_hours": {
+      "type": "json",
+      "required": true
     }
   }
 }

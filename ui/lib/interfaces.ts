@@ -22,6 +22,7 @@ interface Cat {
     weight: number;
     neutered: boolean;
     nfc?: string;
+    feeding_hours?: string[];
     life_stage_factor?: LifeStageFactor;
 }
 
