@@ -112,6 +112,9 @@ const EditCatForm = ({ cat, lifeStageFactors }: EditCatFormProps) => {
                         label="Peso (kg)"
                         type="number"
                         defaultValue={cat.weight}
+                        slotProps={{
+                            htmlInput: { step: "0.01", min: "0" }
+                        }}
                         fullWidth
                         required
                     />

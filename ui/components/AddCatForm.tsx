@@ -68,7 +68,9 @@ const AddCatForm = (props: AddCatFormProps) => {
                     name="weight"
                     label="Peso (kg)"
                     type="number"
-                    // slotProps={{ inputLabel: { shrink: true }, input: { step: "0.01" } }} # TODO: ajeitar pra aceitar decimais
+                    slotProps={{
+                        htmlInput: { step: "0.01", min: "0" }
+                    }}
                     variant="outlined"
                     required
                     fullWidth
