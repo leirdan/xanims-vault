@@ -14,10 +14,10 @@
 #define BUZZER_PIN D5
 #define SERVO_PIN D6
 
-#define WIFI_SSID "brisa-4886458"
-#define WIFI_SENHA "JycSSR8e"
-// #define WIFI_SSID "amo musica"
-// #define WIFI_SENHA "Th3Summ0n1ng"
+// #define WIFI_SSID "brisa-4886458"
+// #define WIFI_SENHA "JycSSR8e"
+#define WIFI_SSID "amo musica"
+#define WIFI_SENHA "Th3Summ0n1ng"
 
 unsigned long ultimoPrintHorario = 0;
 
@@ -26,7 +26,7 @@ void setup()
   Serial.begin(115200);
   Serial.println("Starting Xanim's Vault...");
 
-  // mem_erase();
+  mem_erase();
   nfc_init(NFC_SDA, NFC_SCL);
   rtc_init();
   buzzer_init(BUZZER_PIN);
@@ -48,42 +48,41 @@ void loop()
   mqtt.processPackets(10);
 
   String nfc_tag = nfc_read_tag();
-  Serial.print("Tag lida: ");
-  Serial.println(nfc_tag);
-
   if (nfc_tag != "")
   {
+    Serial.print("Tag lida: ");
+    Serial.println(nfc_tag);
     if (!mem_has_data())
-  {
-    JsonDocument payload;
-    payload["nfc"] = nfc_tag;
-    String raw_payload;
-    serializeJson(payload, raw_payload);
-    mqtt_cat_nfc.publish(raw_payload.c_str());
-  }
-    else
-  {
-    String stored_nfc = mem_get_string(nfc_k);
-    Serial.print("Tag guardada: ");
-    Serial.println(stored_nfc);
-    if (stored_nfc == nfc_tag)
     {
-      Serial.println("Autorizado.");
-      container_toggle(false);
-      buzzer_play_mario();
+      JsonDocument payload;
+      payload["nfc"] = nfc_tag;
+      String raw_payload;
+      serializeJson(payload, raw_payload);
+      mqtt_cat_nfc.publish(raw_payload.c_str());
     }
     else
     {
-      Serial.println("Invasão detectada! ");
-      container_toggle(true);
-      String invasion_alert = rtc_get_iso_date();
-      Serial.print("Hora da invasão: ");
-      Serial.println(invasion_alert);
+      String stored_nfc = mem_get_string(nfc_k);
+      Serial.print("Tag guardada: ");
+      Serial.println(stored_nfc);
+      if (stored_nfc == nfc_tag)
+      {
+        Serial.println("Autorizado.");
+        container_toggle(false);
+        buzzer_play_mario();
+      }
+      else
+      {
+        Serial.println("Invasão detectada! ");
+        container_toggle(true);
+        String invasion_alert = rtc_get_iso_date();
+        Serial.print("Hora da invasão: ");
+        Serial.println(invasion_alert);
 
-      MQTT_send_invasor_alert(stored_nfc, nfc_tag, invasion_alert);
-      buzzer_play_mario_death();
+        MQTT_send_invasor_alert(stored_nfc, nfc_tag, invasion_alert);
+        buzzer_play_mario_death();
+      }
     }
-  }
   }
 
   if (is_feeding_time() && mem_has_data())
@@ -94,6 +93,6 @@ void loop()
     if (MQTT_register_feed(nfc, mem_get_int(portion_k), date))
     {
       container_toggle(true);
-  }
+    }
   }
 }
