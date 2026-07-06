@@ -67,9 +67,6 @@ export default {
             const cats = await strapi.documents("api::cat.cat").findMany({
               sort: "createdAt:desc",
               limit: 1,
-              filters: {
-                nfc: null
-              }
             });
 
             const cat = cats.length > 0 ? cats[0] : null;
@@ -109,6 +106,7 @@ export default {
               data: {
                 nfc: nfc,
               },
+              status: "published"
             });
 
             // TODO: ver se o gato já tem NFC e tratar isso?
@@ -120,6 +118,8 @@ export default {
             });
             break;
           } catch (err) {
+            strapi.log.error("Erro interno ao processar cat/nfc:");
+            strapi.log.error(err);
             break;
           }
         }

@@ -51,15 +51,15 @@ bool is_feeding_time()
   // return true;
   DateTime now = rtc_get_hour();
   char current_time_str[6];
-  sprintf(current_time_str, "%02d:%02d", now.hour(), now.minute());
+  sprintf(current_time_str, "%02d:%02d:%02d", now.hour(), now.minute(), now.second());
   String keys[] = {hour1_k, hour2_k, hour3_k, hour4_k, hour5_k, hour6_k};
 
   for (int i = 0; i < 6; i++)
   {
     String stored_time = mem_get_string(keys[i]);
-    if (stored_time.length() >= 5)
+    if (stored_time.length() >= 7)
     {
-      if (stored_time.substring(0, 5) == String(current_time_str))
+      if (stored_time.substring(0, 7) == String(current_time_str))
       {
         return true;
       }

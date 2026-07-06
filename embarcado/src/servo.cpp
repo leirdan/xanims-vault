@@ -9,10 +9,10 @@ void servo_init(int porta)
 
 void servo_close()
 {
-    myServo.write(180);
+    myServo.write(90);
 }
 
 void servo_open()
 {
-    myServo.write(0);
+    myServo.write(200);
 }
