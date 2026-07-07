@@ -4,54 +4,59 @@ Nesta seção são apresentados os requisitos finais do sistema, já refinados a
 
 == Requisitos funcionais
 
-*RF01 Cadastro do animal.* O aplicativo deve permitir o cadastro de um gato contendo nome, peso, idade, status de castração e identificador NFC.
+=== RF01 - Cadastro do animal
+O sistema deve permitir o cadastro de um gato contendo as informações de nome, peso, data de nascimento, status de castração e identificador NFC;
 
-*RF02 Geração do plano alimentar.* O CMS deve calcular automaticamente a quantidade diária de ração com base nas características cadastradas do gato, utilizando por padrão 4 horários.
+=== RF02 - Geração do plano alimentar
+O sistema calcula automaticamente a quantidade diária de ração com base nas características cadastradas do gato, considerando a quantidade de refeições configurada pelo usuário (3, 4 ou 6 por dia).
 
-*RF03 Configuração de horários.* O aplicativo deve permitir configurar 3, 4 ou 6 horários de alimentação diária.
+=== RF03 - Configuração e distribuição das refeições
+O sistema permite configurar 3, 4 ou 6 refeições por dia, com definição manual dos horários de alimentação, e distribui automaticamente a quantidade diária de ração entre os horários configurados.
 
-*RF04 Distribuição das porções.* O CMS deve dividir automaticamente a quantidade diária de ração entre os horários configurados.
+=== RF04 - Operação offline
+O sistema deve continuar operando utilizando dados salvos na memória quando estiver sem conexão com Internet. Ele depende de MQTT e pode travar em caso de indisponibilidade do broker.
 
-*RF05 Sincronização com o sistema embarcado.* O CMS deve enviar ao sistema embarcado, via MQTT, os horários de alimentação, a quantidade de ração por porção e o identificador NFC autorizado.
+=== RF05 - Atualização de dados
+O embarcado deve atualizar os dados armazenados localmente sempre que novas configurações forem recebidas da API.
 
-*RF06 Persistência local.* O sistema embarcado deve armazenar em memória flash o identificador NFC, os horários de alimentação e a quantidade por porção.
+=== RF06 - Liberação e controle da ração
+O sistema deve liberar automaticamente a porção programada nos horários definidos, junto de um alarme sonoro.
 
-*RF07 Atualização de dados.* O sistema embarcado deve atualizar os dados armazenados localmente sempre que novas configurações forem recebidas do CMS.
+=== RF07 - Identificação NFC
+O sistema deve detectar tags NFC posicionadas a até 4 cm do leitor e comparar a tag detectada com a cadastrada se houver. Caso seja válida, o acesso ao pote deve ser permitido; caso contrário, o pote deve ser bloqueado e um alerta enviado à API.
 
-*RF08 Liberação automática da ração.* O sistema embarcado deve liberar automaticamente a porção programada nos horários definidos, junto de um alerta sonoro via buzzer.
+=== RF08 - Monitoramento do consumo
+O sistema deve monitorar o consumo do gato a partir do peso da balança e enviar registros de consumo (ou ausência dele) 60 segundos antes do próximo horário de liberação. O consumo deve ser classificado como:
+- Consumo total => até 10%
+- Consumo parcial => 11% até 90%
+- Não consumiu => acima de 90%
+O consumo será registrado dessa forma para evitar variações na balança ao longo do tempo.
 
-*RF09 Controle da quantidade liberada.* O sistema embarcado deve utilizar uma balança para medir a quantidade de ração liberada, interrompendo a liberação quando a quantidade programada for atingida.
+=== RF09 - Visualização de estatísticas
+O sistema deve permitir visualizar: horários em que o gato se alimentou; consumo parcial ou completo; tentativas de acesso por outros gatos; alertas gerados pelo sistema.
 
-*RF10 Identificação NFC.* O sistema embarcado deve detectar tags NFC posicionadas a até 4 cm do leitor.
-
-*RF11 Validação de acesso.* O sistema embarcado deve comparar a tag NFC detectada com a tag cadastrada. Caso válida, o acesso ao pote deve ser permitido; caso contrário, o pote deve ser bloqueado e um alerta enviado ao CMS.
-
-*RF12 Monitoramento do consumo.* O sistema embarcado deve monitorar o peso restante da ração liberada utilizando a célula de carga, registrando o peso da porção logo após a liberação e realizando leituras periódicas e estabilizadas do peso restante. O consumo é classificado como:
-- Consumo total: peso restante inferior a 10% da porção liberada;
-- Consumo parcial: peso restante entre 11% e 90% da porção liberada;
-- Consumo não realizado: peso restante superior a 90% da porção liberada.
-
-*RF13 Registro de eventos.* O sistema embarcado deve enviar ao CMS o horário da alimentação, a quantidade liberada, o status do consumo, a identificação NFC detectada e eventuais alertas de acesso inválido.
-
-*RF14 Operação offline.* O sistema embarcado deve continuar operando com base nos dados salvos na memória flash quando estiver sem conexão com a internet ou com o broker MQTT.
-
-*RF15 Visualização de estatísticas.* O aplicativo deve permitir visualizar os horários em que o gato se alimentou, o consumo parcial ou completo, as tentativas de acesso por outros gatos e os alertas gerados pelo sistema.
+=== RF10 - Registro de Eventos
+O embarcado deve enviar à API: horário da alimentação; quantidade liberada; status do consumo;identificação NFC detectada; alertas de acesso inválido.
 
 == Requisitos não funcionais
 
-*RNF01 Precisão da liberação.* O sistema embarcado deve possuir margem de erro máxima de ± 5 g na liberação da ração.
+=== RNF01 - Persistência local
+Os dados devem persistir mesmo quando o sistema esteja offline.
 
-*RNF02 Tempo de resposta do bloqueio.* O mecanismo de fechamento do pote deve responder em até 1 segundo após a identificação de uma tag NFC inválida.
+=== RNF02 - Confiabilidade após queda de energia
+Os dados armazenados na memória flash não devem ser perdidos em caso de queda de energia ou reinicialização inesperada.
 
-*RNF03 Persistência de dados.* As informações armazenadas em memória flash devem permanecer disponíveis mesmo após reinicialização inesperada ou queda de energia do sistema embarcado.
+=== RNF03 - Precisão na liberação
+A liberação deve ser interrompida quando a quantidade programada for atingida com margem de erro de ± 5g.
 
-*RNF04 Tempo de detecção NFC.* A tag NFC deve ser detectada em no máximo 1 segundo após a aproximação ao leitor.
+=== RNF04 - Tempo de resposta do bloqueio
+Ao detectar aproximação indevida, o sistema irá fechar o pote em até 1 segundo e enviar um alertar à API.
 
-*RNF05 Comunicação.* A comunicação entre o servidor (CMS) e o sistema embarcado deve utilizar o protocolo MQTT, via broker Mosquitto, enquanto a comunicação entre o aplicativo e o CMS deve utilizar o protocolo HTTP.
+=== RNF05 - Comunicação
+A comunicação entre o servidor e o sistema embarcado deve utilizar o protocolo MQTT via broker Mosquitto e HTTP do servidor para o app WEB.
 
-*RNF06 Funcionamento offline.* O sistema embarcado deve manter o funcionamento básico mesmo sem conexão com a internet.
-
-*RNF07 Sincronização de configurações.* Novas configurações recebidas via MQTT devem sobrescrever os dados armazenados anteriormente na memória flash.
+=== RNF06 - Tempo de detecção NFC
+A tag NFC deve ser detectada em no máximo 1 segundo após a aproximação ao leitor.
 
 == Regras de sistema
 
