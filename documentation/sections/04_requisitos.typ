@@ -14,7 +14,7 @@ O sistema calcula automaticamente a quantidade diária de ração com base nas c
 O sistema permite configurar 3, 4 ou 6 refeições por dia, com definição manual dos horários de alimentação, e distribui automaticamente a quantidade diária de ração entre os horários configurados.
 
 === RF04 - Operação offline
-O sistema deve continuar operando utilizando dados salvos na memória quando estiver sem conexão com Internet. Ele depende de MQTT e pode travar em caso de indisponibilidade do broker.
+O sistema deve continuar operando utilizando dados salvos na memória quando estiver sem conexão com Internet.
 
 === RF05 - Atualização de dados
 O embarcado deve atualizar os dados armazenados localmente sempre que novas configurações forem recebidas da API.

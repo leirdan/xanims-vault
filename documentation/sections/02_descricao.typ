@@ -12,11 +12,11 @@ O principal usuário do sistema é o pai/mãe de pet, preocupado com a saúde al
 
 O Xanim's Vault é composto por quatro grandes blocos, que se comunicam conforme ilustrado no diagrama de componentes (ver @sec-componentes):
 
-- *Aplicativo (UI)*: aplicação para cadastro do animal e visualização de estatísticas de consumo, desenvolvida em MIT App Inventor;
+- *Aplicativo (UI)*: aplicação para cadastro do animal e visualização de estatísticas de consumo, desenvolvida em Next.js com Material UI;
 - *Backend / CMS (Strapi)*: responsável por armazenar os dados de gatos, dietas, horários e registros, além de calcular o plano alimentar;
 - *Banco de dados (SQLite)*: banco de dados leve utilizado pelo Strapi para persistência das informações;
 - *Broker MQTT (Mosquitto)*: intermediário de comunicação publish/subscribe entre o backend e o sistema embarcado;
-- *Sistema embarcado (ESP32)*: responsável pela leitura de NFC, pesagem da ração, liberação das porções, bloqueio do pote e envio de eventos.
+- *Sistema embarcado (ESP8266)*: responsável pela leitura de NFC, pesagem da ração, liberação das porções, bloqueio do pote e envio de eventos.
 
 A comunicação entre os módulos ocorre da seguinte forma:
 
@@ -51,7 +51,7 @@ O fator do estágio de vida varia conforme a condição do animal (por exemplo, 
 - Adulto: 3800 kcal/kg (3,80 kcal/g);
 - Adulto castrado: 3705 kcal/kg (3,70 kcal/g).
 
-A quantidade diária calculada é então dividida entre os horários de alimentação configurados (3, 4 ou 6 horários, sendo 4 o padrão). Durante a liberação, a ração é dispensada aos poucos, permitindo que o ESP32 monitore o peso na balança em tempo real e interrompa a liberação assim que a porção programada for atingida, com margem de erro de ± 5 g.
+A quantidade diária calculada é então dividida entre os horários de alimentação configurados (3, 4 ou 6 horários, sendo 4 o padrão). Durante a liberação, a ração é dispensada aos poucos, permitindo que o ESP8266 monitore o peso na balança em tempo real e interrompa a liberação assim que a porção programada for atingida, com margem de erro de ± 5 g.
 
 == Escopo do protótipo
 
